@@ -16,18 +16,18 @@ fs.readFile(filePath, 'utf8', (err, data) => {
 
     let sumSafe = 0;
 
-    //returns -1 if safe, or the problematic index
+    //returns true if the array is valid, false otherwise
     function isValid(array) {
-        if (array.length < 2) return -1;
+        if (array.length < 2) return true;
         const increasing = array[1] > array[0];
         for (let i = 1; i < array.length; i++) {
             if ((increasing && array[i] <= array[i - 1]) || (!increasing && array[i] >= array[i - 1])) {
-                return i-1;
+                return false;
             } else if (Math.abs(array[i] - array[i - 1]) > 3 || Math.abs(array[i] - array[i - 1]) < 1) {
-                return i-1;
+                return false;
             }
         }
-        return -1;
+        return true;
     }
 
     lines.forEach(line => {
@@ -35,12 +35,12 @@ fs.readFile(filePath, 'utf8', (err, data) => {
         let safe = isValid(array);
         let buffer = true;
         console.log('Array:', array, safe);
-        if (safe != -1 && buffer == true) { //if buffer exists, remove invalid element and retry
+        if (!safe && buffer == true) { //if buffer exists, remove invalid element and retry
             buffer = false;
             let foundValid = false;
             for (let i = 0; i < array.length; i++) {
                 const newArray = array.slice(0, i).concat(array.slice(i + 1));
-                if (isValid(newArray) == -1) {
+                if (isValid(newArray)) {
                     foundValid = true;
                     break;
                 }
@@ -48,7 +48,7 @@ fs.readFile(filePath, 'utf8', (err, data) => {
             if (foundValid) {
                 sumSafe++;
             }
-        } else if (safe == -1) {
+        } else if (safe) {
             sumSafe++;
         }
         
