@@ -16,10 +16,10 @@ fs.readFile(filePath, 'utf8', (err, data) => {
 
     if (commands) {
         commands.forEach(command => {
-            const match = command.match(/mul\((\d{1,3}),(\d{1,3})\)/);
+            const match = command.match(/\d{1,3}/g);
             if (match) {
-                const num1 = parseInt(match[1], 10);
-                const num2 = parseInt(match[2], 10);
+                const num1 = parseInt(match[0], 10);
+                const num2 = parseInt(match[1], 10);
                 
                 sum += num1 * num2;
             }
